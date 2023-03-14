@@ -1,127 +1,60 @@
-const express= require('express')
-const app=express();
-const port=3000;
-const bodyParser =require('body-parser')
-const urlEncodedParser=bodyParser.urlencoded({extended:false})
-
-
+const express = require('express');
+const app = express();
+const port = 3000;
+const bodyParser = require('body-parser');
+const urlEncodedParser = bodyParser.urlencoded({extended:false});
 const fs = require('fs');
-const jsonParser = bodyParser.json();
-const fileBmi = 'bmi.json';
 
-let rawBmi = fs.readFile(fileBmi);
-let data = JSON.parse(rawBmi);
-
-
-app.set('views','views');
-app.set('view engine','hbs');
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended:true
-}))
-
-async function addBmi() {
-    const url = server + '/bmi';
-    const bmi = { id: bmiId, height: bmiHeight, weight: bmiWeight, calculateBmi: bmiTotal  };
-    const options = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    }
-    const response = await fetch(url, options);
-}
-
-
-app.post('/bmi',jsonParser,(req,res)=>{
-    data.push(req.body);
-    fs.writeFile(fileBmi, JSON.stringify(data, null, 2));
-    res.end();
+fs.readFile('./bmi.json', 'utf-8', (err, jsonString) => {
+    console.log(jsonString);
 });
 
-app.get('/', function(request,response){
-    response.render('home');
-});
-
-
-app.post('/process-bmi',urlEncodedParser,function(req,res){
-    heigh = parseFloat(req.body.Height);
-    weigh = parseFloat(req.body.Weight);
-    bmi = weigh / (heigh * heigh);
- 
-    //number to string format
-    bmi = bmi.toFixed();
- 
-    req_name = req.body.Name;
- 
-    // CONDITION FOR BMI
-    if (bmi < 19) {
-        res.send("<h3>hey! " + req_name +
-                 " your BMI is around: " + bmi +
-                 "<centre><h1>You are Underweight!");
-    } else if (19 <= bmi && bmi < 25) {
-        res.send("<h3>hey! " + req_name +
-                 " your BMI is around: " + bmi +
-                 "<centre><h1>You are Normalweight!");
-    } else if (25 <= bmi && bmi < 30) {
-        res.send("<h3>hey! " + req_name +
-                 " your BMI is around: " + bmi +
-                 "<centre><h1>You are Overweight!");
-    } else {
-        res.send("<h3>hey! " + req_name +
-                 " your BMI is around: " + bmi +
-                 "<centre><h1>You are Obese!");
-    }
-});
-
-const server = 'http://localhost:3000';
-    var bmiId;
-    var bmiHeight;
-    var bmiWeight;
-    var bmiTotal;
-
-    async function fetchBmi() {
-        const url = server + '/bmi';
-        const options = {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            }
+function jsonReader(filePath, cb) {
+    fs.readFile(filePath, 'utf-8' , (err, fileData) => {
+        if (err) {
+        return cb && cb(err);
         }
-        const response = await fetch(url, options);
-        const bmi = await response.json();
-       // populateContent(bmi);
-    }
+        try {
+        const object = JSON.parse(fileData);
+        return cb && cb(null, object);
+        } catch (error) {
+        return cb && cb(err);
+        }
+    });
+}
 /*
-    function populateContent(bmi) {
-        var table = document.getElementById('content');
-        table.innerHTML = "<tr><th>Name</th><th>Height</th>Weight</th>BMI</th></tr>";
-        bmi.forEach(bmis => {
-            var row = document.createElement('tr');
-            var dataId = document.createElement('td');
-            var textId = document.createTextNode(bmis.id);
-            dataId.appendChild(textId);
-            var dataName = document.createElement('td');
-            var textName = document.createTextNode(bmis.Height);
-            dataName.appendChild(textName);
-            var dataName = document.createElement('td');
-            var textName = document.createTextNode(bmis.Weight);
-            dataName.appendChild(textName);
-            var dataName = document.createElement('td');
-            var textName = document.createTextNode(bmis.Totals);
-            dataName.appendChild(textName);
-            row.appendChild(dataId);
-            row.appendChild(dataName);
-            table.appendChild(row);
-        });
+const newObject = {
+    name: 'Wanjiku',
+    weight: 106,
+    height: 67,
+    bmi: 21
+};
+
+fs.writeFile('./newBmi.json', JSON.stringify(newObject, null, 2), err => {
+    if (err) {
+        console.log(err);
+    } else {
+        console.log('File successfully written');
     }
+});
 */
-    
+
+app.set('views', 'views');
+app.set('view engine', 'hbs');
+app.use(express.static('public'));
+
+app.get('/', function (request, response) {
+    response.render('bmi_home');
+});
 
 
-
+app.post('/bmi-calculator', urlEncodedParser, function (request, response) {
+    bmi = user_weight / (user_height * user_height);
+    response.end('Thank you' + ' ' + request.body.user_name + 'Your BMI is  ' + request.body.bmi + '[weight]:' + request.body.user_weight + '[height]: ' + request.body.user_height);
+});
 
 
 app.listen(port);
 console.log('server is listening on port 3000');
+
+
