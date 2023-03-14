@@ -8,17 +8,18 @@
 </head>
 <body>
 <form action="http://localhost:3000/process-bmi" method="POST" id="bmi-form">
-    <input type="text" name="Name" placeholder="Enter yor Name"/><br>
+    <input type="text" name="Name" placeholder="Enter your Name"/><br>
     <input type="text" name="Height" placeholder="Enter yor Height"/><br>
     <input type="text" name="Weight" placeholder="Enter yor Weight"/><br>
     <input type="submit" name="btn_calculate" value="Calculate BMI"/>
 </form>
+/*
 <script>
     const server = 'http://localhost:3000';
     var bmiId;
     var bmiHeight;
     var bmiWeight;
-    var bmi;
+    var bmiTotal;
 
     async function fetchBmi() {
         const url = server + '/bmi';
@@ -30,7 +31,7 @@
         }
         const response = await fetch(url, options);
         const bmi = await response.json();
-        populateContent(bmi);
+       // populateContent(bmi);
     }
 
 function populateContent(users) {
@@ -75,6 +76,7 @@ function populateContent(users) {
         e.preventDefault();
     }); 
 </script>
+*/
 </body>
 
 </html>
