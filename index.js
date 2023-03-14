@@ -9,7 +9,7 @@ const fs = require('fs');
 const jsonParser = bodyParser.json();
 const fileBmi = 'bmi.json';
 
-let rawBmi = fs.readFileSync(fileBmi);
+let rawBmi = fs.readFile(fileBmi);
 let data = JSON.parse(rawBmi);
 
 
@@ -22,13 +22,13 @@ app.use(bodyParser.urlencoded({
 
 async function addBmi() {
     const url = server + '/bmi';
-    const bmi = { id: bmiId, height: bmiHeight, weight: bmiWeight, calculateBmi: bmi  };
+    const bmi = { id: bmiId, height: bmiHeight, weight: bmiWeight, calculateBmi: bmiTotal  };
     const options = {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(course)
+        body: JSON.stringify(data)
     }
     const response = await fetch(url, options);
 }
@@ -36,12 +36,12 @@ async function addBmi() {
 
 app.post('/bmi',jsonParser,(req,res)=>{
     data.push(req.body);
-    fs.writeFileSync(fileBmi, JSON.stringify(data, null, 2));
+    fs.writeFile(fileBmi, JSON.stringify(data, null, 2));
     res.end();
 });
 
 app.get('/', function(request,response){
-    response.render('home',{name:'Jason Bekker'});
+    response.render('home');
 });
 
 
@@ -79,7 +79,7 @@ const server = 'http://localhost:3000';
     var bmiId;
     var bmiHeight;
     var bmiWeight;
-    var bmi;
+    var bmiTotal;
 
     async function fetchBmi() {
         const url = server + '/bmi';
@@ -91,9 +91,9 @@ const server = 'http://localhost:3000';
         }
         const response = await fetch(url, options);
         const bmi = await response.json();
-        populateContent(bmi);
+       // populateContent(bmi);
     }
-
+/*
     function populateContent(bmi) {
         var table = document.getElementById('content');
         table.innerHTML = "<tr><th>Name</th><th>Height</th>Weight</th>BMI</th></tr>";
@@ -116,7 +116,7 @@ const server = 'http://localhost:3000';
             table.appendChild(row);
         });
     }
-
+*/
     
 
 
