@@ -4,6 +4,8 @@ const port = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
 const urlEncodedParser = bodyParser.urlencoded({extended:false});
 const fs = require('fs');
+const { platform } = require('os');
+const { Cipher } = require('crypto');
 
 fs.readFile('./bmi.json', 'utf-8', (err, jsonString) => {
     console.log(jsonString);
@@ -56,5 +58,4 @@ app.post('/bmi-calculator', urlEncodedParser, function (request, response) {
 
 app.listen(port);
 console.log(`server listening on port ${port}`);
-
 
